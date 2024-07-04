@@ -89,17 +89,22 @@ class SendEmail(APIView):
     def post(self, request):
         serializer = EmailSerializer(data=request.data)
         if serializer.is_valid():
-            toEmail = serializer.validated_data['toEmail']
+            to_email = serializer.validated_data['to_email']
             subject = serializer.validated_data['subject']
             message = serializer.validated_data['message']
             
-            send_mail(
+            # Render the HTML content
+            html_content = render_to_string('general_email.html', {'message': message})
+            text_content = strip_tags(html_content)
+            
+            msg = EmailMultiAlternatives(
                 subject,
-                message,
+                text_content,
                 settings.DEFAULT_FROM_EMAIL,
-                [toEmail],
-                fail_silently=False,
+                [to_email]
             )
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
             
             return Response({'message': 'Email sent successfully'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
