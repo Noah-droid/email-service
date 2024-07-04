@@ -21,7 +21,7 @@ This is a Django-based mail microservice that handles sending OTPs for verificat
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/your-repo/email-service.git
+    git clone https://github.com/Noah-droid/email-service.git
     cd mail
     ```
 
