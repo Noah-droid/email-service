@@ -29,7 +29,7 @@ schema_view = get_schema_view(
       description="API documentation for the Email and OTP microservice",
     #   terms_of_service="https://www.google.com/policies/terms/",
     #   contact=openapi.Contact(email="contact@example.com"),
-      license=openapi.License(name="BSD License"),
+    #   license=openapi.License(name="BSD License"),
    ),
    public=True,
    permission_classes=(permissions.AllowAny,),
