@@ -1,4 +1,6 @@
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.response import Response
@@ -25,14 +27,21 @@ class SendOTP(APIView):
             email = serializer.validated_data['email']
             otp = ''.join(secrets.choice(string.digits) for i in range(6))
             
-            send_mail(
-                'Your OTP Code',
-                f'Your OTP code is {otp}',
-                settings.DEFAULT_FROM_EMAIL,
-                [email],
-                fail_silently=False,
-            )
+            # Render the email template
+            html_content = render_to_string('otp_email.html', {'email': email, 'otp': otp})
+            text_content = strip_tags(html_content)
             
+            # Send OTP via email
+            msg = EmailMultiAlternatives(
+                'Your OTP Code',
+                text_content,
+                settings.DEFAULT_FROM_EMAIL,
+                [email]
+            )
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
+
+            # Save OTP in database
             OTP.objects.create(email=email, otp=otp)
             
             return Response({'message': 'OTP sent successfully'}, status=status.HTTP_200_OK)
@@ -66,6 +75,9 @@ class VerifyOTP(APIView):
                 return Response({'message': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+
 class SendEmail(APIView):
     @swagger_auto_schema(
         request_body=EmailSerializer,
@@ -91,3 +103,6 @@ class SendEmail(APIView):
             
             return Response({'message': 'Email sent successfully'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
