@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import OTP
 
 class EmailSerializer(serializers.Serializer):
-    to_email = serializers.EmailField()
+    toEmail = serializers.EmailField()
     subject = serializers.CharField(max_length=255)
     message = serializers.CharField()
 

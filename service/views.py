@@ -89,7 +89,7 @@ class SendEmail(APIView):
     def post(self, request):
         serializer = EmailSerializer(data=request.data)
         if serializer.is_valid():
-            to_email = serializer.validated_data['to_email']
+            toEmail = serializer.validated_data['toEmail']
             subject = serializer.validated_data['subject']
             message = serializer.validated_data['message']
             
@@ -97,7 +97,7 @@ class SendEmail(APIView):
                 subject,
                 message,
                 settings.DEFAULT_FROM_EMAIL,
-                [to_email],
+                [toEmail],
                 fail_silently=False,
             )
             
