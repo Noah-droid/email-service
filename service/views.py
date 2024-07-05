@@ -1,3 +1,5 @@
+# The above code defines Django API views for sending OTP via email, verifying OTP, and sending
+# general emails.
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -89,7 +91,7 @@ class SendEmail(APIView):
     def post(self, request):
         serializer = EmailSerializer(data=request.data)
         if serializer.is_valid():
-            to_email = serializer.validated_data['to_email']
+            toEmail = serializer.validated_data['toEmail']
             subject = serializer.validated_data['subject']
             message = serializer.validated_data['message']
             
@@ -101,7 +103,7 @@ class SendEmail(APIView):
                 subject,
                 text_content,
                 settings.DEFAULT_FROM_EMAIL,
-                [to_email]
+                [toEmail]
             )
             msg.attach_alternative(html_content, "text/html")
             msg.send()
