@@ -157,5 +157,7 @@ SWAGGER_SETTINGS = {
 }
 
 
+APPEND_SLASH = False
+
 
 CORS_ORIGIN_ALLOW_ALL = config('CORS_ORIGIN_ALLOW_ALL', default=False, cast=bool)
